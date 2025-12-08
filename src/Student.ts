@@ -1,14 +1,7 @@
-import React from "react";
+import { Student } from "./types/Student";
 import { generate } from "shortid";
 
-interface Item {
-  id: string;
-  name: string;
-  age: number;
-  year: number;
-}
-
-let Student: Item[] = [
+const Students: Student[] = [
   {
     id: generate(),
     name: "Jacob",
@@ -65,4 +58,4 @@ let Student: Item[] = [
   },
 ];
 
-export default Student;
+export default Students;
