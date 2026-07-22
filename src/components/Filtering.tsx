@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Student, SortField, SortOrder } from "../types/Student";
 import { filterStudents, sortStudents, toggleSortOrder } from "../utils";
-import AddStudentButton from "./AddStudentButton";
-import SearchBar from "./SearchBar";
-import SortButtons from "./SortButtons";
-import StudentGrid from "./StudentGrid";
+import AddStudentButton from "./controls/AddStudentButton";
+import SearchBar from "./controls/SearchBar";
+import SortButtons from "./controls/SortButtons";
+import StudentGrid from "./students/StudentGrid";
 
 interface FilteringProps {
   students: Student[];

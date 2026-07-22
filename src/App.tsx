@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
-import Background from "./components/Background";
+import Background from "./components/layout/Background";
 import Filtering from "./components/Filtering";
-import Header from "./components/Header";
-import StudentForm from "./components/StudentForm";
+import Header from "./components/layout/Header";
+import StudentForm from "./components/form/StudentForm";
 import Students from "./Student";
 import { StudentFormData, Student as StudentType } from "./types/Student";
 import { createStudent } from "./utils/studentUtils";
