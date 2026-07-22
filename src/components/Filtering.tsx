@@ -1,10 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Student, SortField, SortOrder } from "@/types/Student";
-import { filterStudents, sortStudents, toggleSortOrder } from "@/utils";
+import React, { useEffect, useRef } from "react";
+import { Student } from "@/types/Student";
+import { useFilterState } from "@/hooks/useFilterState";
 import { useGlobalKeydown } from "@/hooks/useGlobalKeydown";
-import AddStudentButton from "@/components/controls/AddStudentButton";
-import SearchBar from "@/components/controls/SearchBar";
-import SortButtons from "@/components/controls/SortButtons";
+import ControlBar from "@/components/controls/ControlBar";
 import StudentGrid from "@/components/students/StudentGrid";
 
 interface FilteringProps {
@@ -14,32 +12,29 @@ interface FilteringProps {
   onAddNew: () => void;
 }
 
-// Unified control bar (search flex-1 + sort segmented + add right)
-// sits above the grid. Wrapper goes column on narrow screens and
-// row at `sm+`. The header at `sm:` baseline-alignment keeps the
-// search input, segmented control, and primary button visually
-// centered against each other.
+/**
+ * Orchestrator for the filtering + sorting + display pipeline.
+ * Delegates state management to `useFilterState`, the control-bar
+ * layout to `ControlBar`, and the grid rendering to `StudentGrid`.
+ *
+ * The only logic that remains here is the global `C` keyboard
+ * shortcut (which needs a stable ref to avoid re-registering the
+ * listener every time `onAddNew` changes).
+ */
 const Filtering: React.FC<FilteringProps> = ({
   students,
   onEdit,
   onDelete,
   onAddNew,
 }) => {
-  const [searchText, setSearchText] = useState<string>("");
-  const [sortBy, setSortBy] = useState<SortField>("name");
-  const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
-
-  const filteredStudents = filterStudents(students, searchText);
-  const sortedStudents = sortStudents(filteredStudents, sortBy, sortOrder);
-
-  const handleSort = (field: SortField): void => {
-    if (sortBy === field) {
-      setSortOrder(toggleSortOrder(sortOrder));
-    } else {
-      setSortBy(field);
-      setSortOrder("asc");
-    }
-  };
+  const {
+    searchText,
+    setSearchText,
+    sortBy,
+    sortOrder,
+    handleSort,
+    sortedStudents,
+  } = useFilterState(students);
 
   // Stable ref so the global `c` shortcut always calls the freshest
   // `onAddNew` (which App re-creates on every render) without
@@ -56,12 +51,14 @@ const Filtering: React.FC<FilteringProps> = ({
 
   return (
     <div>
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-6">
-        <SearchBar searchText={searchText} onSearchChange={setSearchText} />
-        <SortButtons sortBy={sortBy} sortOrder={sortOrder} onSort={handleSort} />
-        <AddStudentButton onClick={onAddNew} />
-      </div>
-
+      <ControlBar
+        searchText={searchText}
+        onSearchChange={setSearchText}
+        sortBy={sortBy}
+        sortOrder={sortOrder}
+        onSort={handleSort}
+        onAddNew={onAddNew}
+      />
       <StudentGrid
         students={sortedStudents}
         onEdit={onEdit}
