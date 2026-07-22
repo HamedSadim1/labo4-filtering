@@ -1,3 +1,4 @@
+import { defineConfig } from "eslint/config";
 import js from "@eslint/js";
 import globals from "globals";
 import react from "eslint-plugin-react";
@@ -5,11 +6,19 @@ import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
 
-export default tseslint.config(
+// `tseslint.config(...)` was deprecated in typescript-eslint v8 in favour
+// of ESLint core's `defineConfig([...])`. The deprecated call's second
+// overload, `(...configs: InfiniteDepthConfigWithExtends[])` flags every
+// call site as deprecated in editors (even when none of the configs carry
+// an `extends` field, as is our case). Migrating to defineConfig keeps
+// the eslint.config.mjs file warning-free without changing runtime
+// behaviour: same presets, same ordering, same rules.
+
+export default defineConfig([
   // @eslint/js v9 and eslint-plugin-react v7 export their `recommended`
   // presets as single config objects (not arrays), so they are passed
   // directly. typescript-eslint's `recommended` is still an array of
-  // configs, so it is spread into the call.
+  // configs, so it is spread into the array.
   js.configs.recommended,
   ...tseslint.configs.recommended,
   react.configs.flat.recommended,
@@ -65,5 +74,5 @@ export default tseslint.config(
         version: "detect",
       },
     },
-  }
-);
+  },
+]);
