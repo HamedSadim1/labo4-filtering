@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Student, SortField, SortOrder } from "@/types/Student";
 import { filterStudents, sortStudents, toggleSortOrder } from "@/utils";
 
@@ -23,6 +23,14 @@ export interface UseFilterStateResult {
    * filter down to search matches first, then sort the result.
    */
   sortedStudents: Student[];
+  /**
+   * `true` when any filter is non-default — searchText is non-empty,
+   * sortBy is not "name", or sortOrder is not "asc". Used by
+   * ControlBar to conditionally show the Reset button.
+   */
+  filtersActive: boolean;
+  /** Resets all search + sort state to defaults. */
+  resetFilters: () => void;
 }
 
 /**
@@ -53,6 +61,14 @@ export const useFilterState = (students: Student[]): UseFilterStateResult => {
     }
   };
 
+  const filtersActive = searchText !== "" || sortBy !== "name" || sortOrder !== "asc";
+
+  const resetFilters = useCallback(() => {
+    setSearchText("");
+    setSortBy("name");
+    setSortOrder("asc");
+  }, []);
+
   return {
     searchText,
     setSearchText,
@@ -60,5 +76,7 @@ export const useFilterState = (students: Student[]): UseFilterStateResult => {
     sortOrder,
     handleSort,
     sortedStudents,
+    filtersActive,
+    resetFilters,
   };
 };

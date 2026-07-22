@@ -34,6 +34,8 @@ const Filtering: React.FC<FilteringProps> = ({
     sortOrder,
     handleSort,
     sortedStudents,
+    filtersActive,
+    resetFilters,
   } = useFilterState(students);
 
   // Stable ref so the global `c` shortcut always calls the freshest
@@ -58,6 +60,8 @@ const Filtering: React.FC<FilteringProps> = ({
         sortOrder={sortOrder}
         onSort={handleSort}
         onAddNew={onAddNew}
+        filtersActive={filtersActive}
+        onResetFilters={resetFilters}
       />
       <StudentGrid
         students={sortedStudents}
