@@ -1,6 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
+    <!-- Blocking inline script — runs before any paint to set the
+         dark class on <html> so Tailwind's `dark:` variants are
+         active from the first frame. Without this, the browser
+         paints light-mode styles first (white background), then
+         React loads, runs useEffect, and adds the dark class —
+         causing a visible white flash on every refresh. Class="dark"
+         on the <html> tag itself is the SSR-side fallback for the
+         same reason. -->
+    <!-- Inline blocking style — sets theme background directly on <html>
+         before the Vite CSS bundle loads. Combined with the inline script,
+         this guarantees the correct background colour on the very first paint
+         frame: the script adds the `dark` class, and this <style> block
+         defines `html.dark { background-color: ... }` so Tailwind's dark mode
+         is effective immediately without waiting for the CSS bundle. -->
+    <style>
+      html { background-color: #f8fafc; }
+      html.dark { background-color: #020617; }
+    </style>
+    <script>
+      document.documentElement.classList.add("dark");
+    </script>
     <meta charset="UTF-8" />
     <link rel="icon" href="/favicon.png" />
     <link rel="manifest" href="/manifest.json" />

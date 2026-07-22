@@ -1,5 +1,20 @@
 @import "tailwindcss";
 
+/*
+ * Design tokens declared via Tailwind v4's `@theme` directive. They
+ * become both CSS custom properties (so other CSS rules can read them
+ * with `var(--...)`) and Tailwind theme entries (so utilities can
+ * reference them in `@apply` or arbitrary-[…] values). Animation
+ * durations + easing used to be hard-coded twice across .animate-modal
+ * and .animate-card — centralising them keeps both rules in lockstep
+ * when the design language moves.
+ */
+@theme {
+  --ease-app: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-modal: 0.25s;
+  --duration-card: 0.35s;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -25,7 +40,7 @@ code {
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(148, 163, 184, 0.2);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -35,4 +50,91 @@ code {
 
 ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(to bottom, #db2777, #7c3aed);
+}
+
+/* Modal entrance animation */
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-modal {
+  /* duration + easing sourced from the @theme block above. */
+  animation: modal-in var(--duration-modal) var(--ease-app) forwards;
+}
+
+/* Staggered card mount: each StudentCard sets animation-delay to its
+   grid index × STAGGER_STEP_MS (see /constants/animations.ts) so the
+   list fades up sequentially instead of in a single hard cut.
+   `backwards` keeps the starting frame applied during the delay so
+   cards remain invisible until their turn arrives. */
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-card {
+  /* duration + easing sourced from the @theme block above. */
+  animation: card-in var(--duration-card) var(--ease-app) backwards;
+}
+
+/*
+ * Focus ring utility — replaces the repeated
+ * `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500`
+ * chain that appears on every interactive element (buttons, inputs,
+ * the sortbar segments, the modal close button, etc.). Centralising
+ * it means the brand focus colour can shift in one place; it also
+ * keeps the JSX markup focused on layout and intent rather than
+ * accessibility plumbing. Note: elements that need extra ring-offset
+ * contrast against a coloured background (AddStudentButton's primary
+ * pink button, the StudentCard card-as-button) keep their
+ * ring-offset utilities inline — `.focus-ring` deliberately does not
+ * bake offset in because most uses don't want it.
+ */
+@layer utilities {
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500;
+  }
+
+  /* Red variant of `.focus-ring` — used by the IconButton red variant
+     (StudentCard delete) so destructive icon buttons get a red focus
+     ring to match their hover tint, just like the original inline
+     `<button>` did before the IconButton extraction. */
+  .focus-ring-red {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Blanket rule for every element so app chrome (buttons, inputs,
+     segmented controls, etc.) honours the user's preferred-motion
+     setting without needing a per-component `motion-reduce:` modifier.
+     `animation-duration` and `transition-duration` both reduce to
+     ~0ms while leaving the animation/transition names intact so that
+     `animation-fill-mode: backwards` on `.animate-card` still applies
+     and the final state lands instantly. */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .animate-card,
+  .animate-modal {
+    animation: none;
+  }
 }

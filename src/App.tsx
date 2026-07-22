@@ -1,98 +1,81 @@
-import { useEffect, useState } from "react";
-import AddStudentButton from "./components/AddStudentButton";
-import Background from "./components/Background";
-import Filtering from "./components/Filtering";
-import Header from "./components/Header";
-import StudentForm from "./components/StudentForm";
-import Students from "./Student";
-import { StudentFormData, Student as StudentType } from "./types/Student";
-import { createStudent } from "./utils/studentUtils";
+import { useAppState } from "@/hooks/useAppState";
+import Background from "@/components/layout/Background";
+import Filtering from "@/components/Filtering";
+import Header from "@/components/layout/Header";
+import StudentForm from "@/components/form/StudentForm";
+import ConfirmDialog from "@/components/dialogs/ConfirmDialog";
 
 function App() {
-  const [students, setStudents] = useState<StudentType[]>(Students);
-  const [showForm, setShowForm] = useState<boolean>(false);
-  const [editingStudent, setEditingStudent] = useState<StudentType | null>(
-    null
-  );
-  const [darkMode, setDarkMode] = useState<boolean>(true);
-
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [darkMode]);
-
-  const addStudent = (formData: StudentFormData): void => {
-    const newStudent = createStudent(formData);
-    setStudents([...students, newStudent]);
-  };
-
-  const updateStudent = (formData: StudentFormData): void => {
-    if (editingStudent) {
-      const updatedStudent = createStudent(formData, editingStudent);
-      setStudents(
-        students.map((s) => (s.id === editingStudent.id ? updatedStudent : s))
-      );
-    }
-  };
-
-  const deleteStudent = (id: string): void => {
-    setStudents(students.filter((s) => s.id !== id));
-  };
-
-  const handleEdit = (student: StudentType): void => {
-    setEditingStudent(student);
-    setShowForm(true);
-  };
-
-  const handleCloseForm = (): void => {
-    setShowForm(false);
-    setEditingStudent(null);
-  };
-
-  const handleSave = (formData: StudentFormData): void => {
-    if (editingStudent) {
-      updateStudent(formData);
-    } else {
-      addStudent(formData);
-    }
-    handleCloseForm();
-  };
+  const {
+    students,
+    showForm,
+    editingStudent,
+    darkMode,
+    pendingDeleteId,
+    modalOpen,
+    pendingDeleteName,
+    toggleDarkMode,
+    handleEdit,
+    handleCloseForm,
+    handleSave,
+    requestDeleteStudent,
+    confirmDeleteStudent,
+    cancelDelete,
+    handleAddNew,
+  } = useAppState();
 
   return (
-    <div
-      className={`min-h-screen py-8 transition-all duration-500 relative overflow-hidden ${
-        darkMode
-          ? "bg-linear-to-br from-slate-950 via-gray-900 to-slate-900 text-white"
-          : "bg-linear-to-br from-pink-50 via-rose-50 to-purple-50 text-gray-900"
-      }`}
-    >
+    <div className="min-h-screen py-8 relative overflow-hidden bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-50 transition-colors duration-500">
       <Background />
 
-      <div className="relative container mx-auto px-4 z-10">
+      {/* While ANY modal is open, pull the main page out of the focus
+          order so Tab cannot leak behind the dialog. `inert` covers
+          focus + a11y tree in modern browsers; `aria-hidden` is the
+          fallback for older engines. */}
+      <div
+        className="relative container mx-auto px-4 z-10"
+        inert={modalOpen || undefined}
+        aria-hidden={modalOpen || undefined}
+      >
         <Header
           darkMode={darkMode}
-          onToggleDarkMode={() => setDarkMode(!darkMode)}
+          onToggleDarkMode={toggleDarkMode}
         />
-
-        <AddStudentButton onClick={() => setShowForm(true)} />
 
         <Filtering
           students={students}
           onEdit={handleEdit}
-          onDelete={deleteStudent}
+          onDelete={requestDeleteStudent}
+          onAddNew={handleAddNew}
         />
-
-        {showForm && (
-          <StudentForm
-            student={editingStudent}
-            onSave={handleSave}
-            onClose={handleCloseForm}
-          />
-        )}
       </div>
+
+      {showForm && (
+        <StudentForm
+          student={editingStudent}
+          onSave={handleSave}
+          onClose={handleCloseForm}
+        />
+      )}
+
+      {pendingDeleteId && (
+        <ConfirmDialog
+          title="Delete student"
+          message={
+            <>
+              Are you sure you want to delete{" "}
+              <span className="font-semibold text-slate-900 dark:text-white">
+                {pendingDeleteName ?? "this student"}
+              </span>
+              ? This action cannot be undone.
+            </>
+          }
+          confirmLabel="Delete"
+          variant="danger"
+          onConfirm={confirmDeleteStudent}
+          onCancel={cancelDelete}
+        />
+      )}
     </div>
   );
 }

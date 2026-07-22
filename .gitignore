@@ -85,3 +85,14 @@ public
 # Temporary folders
 tmp/
 temp/
+
+# Build artefacts emitted by `tsc -b` against the composite
+# `tsconfig.node.json` project reference (which includes
+# `vite.config.ts`). They regenerate every time `tsc -b` runs,
+# which is part of the `build` script (`tsc -b && vite build`).
+# The `typecheck` script uses `tsc --noEmit`, so it does NOT
+# re-create them. Excluding these patterns keeps the working
+# tree clean and prevents accidental commits of cache files.
+*.tsbuildinfo
+vite.config.d.ts
+vite.config.js
