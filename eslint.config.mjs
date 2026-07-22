@@ -6,13 +6,26 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["dist", "node_modules", "public"] },
+  // @eslint/js v9 and eslint-plugin-react v7 export their `recommended`
+  // presets as single config objects (not arrays), so they are passed
+  // directly. typescript-eslint's `recommended` is still an array of
+  // configs, so it is spread into the call.
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
+  react.configs.flat.recommended,
   {
-    extends: [
-      js.configs.recommended,
-      ...tseslint.configs.recommended,
-      react.configs.flat.recommended,
+    // Project root config files use CJS globals (e.g. `module`) and are not
+    // application code — exclude them from the browser-globals env. Also
+    // skip the husky hook scripts and any third-party build artefacts.
+    ignores: [
+      "dist/**",
+      "node_modules/**",
+      "public/**",
+      ".husky/**",
+      "**/*.config.{js,cjs,mjs,ts}",
     ],
+  },
+  {
     files: ["src/**/*.{ts,tsx}"],
     languageOptions: {
       ecmaVersion: 2020,

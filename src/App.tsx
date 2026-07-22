@@ -65,7 +65,15 @@ function App() {
     <div className="min-h-screen py-8 relative overflow-hidden bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-50 transition-colors duration-500">
       <Background />
 
-      <div className="relative container mx-auto px-4 z-10">
+      {/* While the modal is open, hide the main page from assistive tech
+          and pull it out of the focus order so Tab cannot leak behind the
+          dialog. `inert` covers focus + a11y tree in modern browsers;
+          `aria-hidden` is the fallback for older engines. */}
+      <div
+        className="relative container mx-auto px-4 z-10"
+        inert={showForm || undefined}
+        aria-hidden={showForm ? true : undefined}
+      >
         <Header
           darkMode={darkMode}
           onToggleDarkMode={() => setDarkMode(!darkMode)}
@@ -78,15 +86,15 @@ function App() {
           onEdit={handleEdit}
           onDelete={deleteStudent}
         />
-
-        {showForm && (
-          <StudentForm
-            student={editingStudent}
-            onSave={handleSave}
-            onClose={handleCloseForm}
-          />
-        )}
       </div>
+
+      {showForm && (
+        <StudentForm
+          student={editingStudent}
+          onSave={handleSave}
+          onClose={handleCloseForm}
+        />
+      )}
     </div>
   );
 }
