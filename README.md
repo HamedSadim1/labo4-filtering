@@ -1,207 +1,278 @@
 # 🎓 Student Management System
 
-A modern, responsive student management application built with React 19, TypeScript, and Tailwind CSS. Features a beautiful glassmorphism design with dark mode support, providing an elegant and intuitive interface for managing student data.
+A modern, responsive student management application built with **React 19**, **TypeScript**, and **Tailwind CSS 4**. Features a beautiful glassmorphism design with dark mode support, keyboard shortcuts, and persistent local storage — providing an elegant and accessible interface for managing student data.
 
-![Student Management System](https://img.shields.io/badge/React-19.0.0-61DAFB?style=for-the-badge&logo=react)
+![React 19](https://img.shields.io/badge/React-19.2.1-61DAFB?style=for-the-badge&logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-3178C6?style=for-the-badge&logo=typescript)
-![Vite](https://img.shields.io/badge/Vite-7.2.6-646CFF?style=for-the-badge&logo=vite)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.1.17-38B2AC?style=for-the-badge&logo=tailwind-css)
+![Vite](https://img.shields.io/badge/Vite-8.1-646CFF?style=for-the-badge&logo=vite)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-38B2AC?style=for-the-badge&logo=tailwind-css)
+
+---
 
 ## ✨ Features
 
 ### 🎨 Modern UI/UX
 
-- **Glassmorphism Design**: Beautiful backdrop blur effects and transparent elements
-- **Dark Mode**: Seamless dark/light theme switching with smooth transitions
-- **Responsive Design**: Optimized for desktop, tablet, and mobile devices
-- **Modern Animations**: Smooth hover effects and micro-interactions
+- **Glassmorphism Design** — Frosted-glass card surfaces with backdrop blur and subtle borders
+- **Dark Mode** — Seamless dark/light theme toggle with smooth cross-fade transitions (sun/moon icon)
+- **Responsive Layout** — Optimized for desktop, tablet, and mobile viewports
+- **Per-Student Accent Hues** — Each student card gets a deterministic HSL colour derived from their name
+- **Staggered Animations** — Cards animate in with a cascading delay for a polished entrance
+- **Animated Background** — Pulsing gradient orbs with a subtle dot-grid pattern overlay
 
 ### 📊 Student Management
 
-- **CRUD Operations**: Create, Read, Update, and Delete student records
-- **Advanced Search**: Real-time search across name, age, and year
-- **Smart Sorting**: Sort by name, age, or year with ascending/descending order
-- **Data Validation**: Form validation with user-friendly error handling
+- **CRUD Operations** — Create, read, update, and delete student records
+- **Real-Time Search** — Instantly filter students by name as you type (press `/` to focus the search bar)
+- **Smart Sorting** — Sort by name, age, or year with ascending/descending toggle in a segmented-control UI
+- **Reset Filters** — One-click reset of all active search/sort state
+- **Data Validation** — Form validation with user-friendly inline error messages
 
-### 🛠 Technical Excellence
+### ⌨️ Keyboard Shortcuts
 
-- **TypeScript**: Full type safety throughout the application
-- **Component Architecture**: Modular, reusable components
-- **Performance Optimized**: Fast builds with Vite and optimized bundles
-- **PWA Ready**: Progressive Web App capabilities with service worker support
+| Key        | Action                |
+| ---------- | --------------------- |
+| `/`        | Focus the search bar  |
+| `C`        | Open add-student form |
+| `Escape`   | Close any modal       |
+| `Enter`    | Edit a student card   |
+| `Space`    | Edit a student card   |
+
+### ♿ Accessibility
+
+- **Focus Traps** — All modals trap keyboard focus to prevent tab leakage
+- **Focus Restoration** — Focus returns to the trigger element after closing a modal
+- **`inert` Attribute** — Main page content is pulled out of the focus order when a modal is open
+- **`aria-*` Attributes** — Proper roles, labels, and states throughout
+- **`motion-reduce`** — Respects the user's reduced-motion preference
+
+### 🛠 Technical Highlights
+
+- **Custom Hooks Architecture** — Logic extracted into reusable hooks (`useAppState`, `useFilterState`, `useFocusTrap`, `useRestoreFocus`, `useGlobalKeydown`, `useLocalStorage`, `useBodyScrollLock`)
+- **Local Storage Persistence** — Student data survives page reloads via `useLocalStorage`
+- **TypeScript Throughout** — Full type safety with strict mode
+- **Component Composition** — Small, single-responsibility components composited into larger ones
+- **Modular Utility Functions** — Separated filter, sort, validation, and student-creation logic
+- **Commit Hooks** — Husky + commitlint + lint-staged for code quality enforcement
+
+---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-- **Node.js** (version 18 or higher)
-- **npm** or **yarn** package manager
+- **Node.js** v18 or higher
+- **npm** or **yarn**
 
 ### Installation
 
-1. **Clone the repository**
+```bash
+# Clone the repository
+git clone https://github.com/HamedSadim1/labo4-filtering.git
+cd labo4-filtering
 
-   ```bash
-   git clone https://github.com/HamedSadim1/labo4-filtering.git
-   cd labo4-filtering
-   ```
+# Install dependencies
+npm install
 
-2. **Install dependencies**
+# Start the development server
+npm run dev
+```
 
-   ```bash
-   npm install
-   ```
+Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-3. **Start the development server**
-
-   ```bash
-   npm run dev
-   ```
-
-4. **Open your browser**
-   Navigate to [http://localhost:5173](http://localhost:5173) to view the application.
-
-### Build for Production
+### Production Build
 
 ```bash
 npm run build
+npm run preview   # Preview the production build locally
 ```
 
-The built files will be in the `dist/` directory, ready for deployment.
+The built files will be in the `dist/` directory.
+
+---
 
 ## 📁 Project Structure
 
-```text
-src/
-├── components/           # Reusable UI components
-│   ├── Background.tsx    # Animated background elements
-│   ├── Header.tsx        # App header with title and theme toggle
-│   ├── AddStudentButton.tsx # Add student action button
-│   ├── SearchBar.tsx     # Search input component
-│   ├── SortButtons.tsx   # Sorting controls
-│   ├── StudentCard.tsx   # Individual student display card
-│   ├── StudentGrid.tsx   # Student cards grid container
-│   ├── EmptyState.tsx    # No results state
-│   ├── StudentForm.tsx   # Add/Edit student modal form
-│   ├── FormField.tsx     # Reusable form input field
-│   └── FormActions.tsx   # Form submit/cancel buttons
-├── types/               # TypeScript type definitions
-│   ├── Student.ts       # Student and form data interfaces
-│   └── index.ts         # Type exports
-├── utils/               # Utility functions
-│   ├── studentUtils.ts  # Student data manipulation
-│   ├── sortUtils.ts     # Sorting algorithms
-│   ├── filterUtils.ts   # Filtering logic
-│   └── index.ts         # Utility exports
-├── Student.ts           # Mock student data
-└── App.tsx             # Main application component
 ```
+src/
+├── components/
+│   ├── buttons/
+│   │   ├── ActionButton.tsx      # Primary/danger action button
+│   │   ├── CancelButton.tsx      # Secondary cancel button
+│   │   └── IconButton.tsx        # Reusable icon button
+│   ├── controls/
+│   │   ├── AddStudentButton.tsx  # "Add Student" primary CTA
+│   │   ├── ControlBar.tsx        # Search + sort + add toolbar
+│   │   ├── SearchBar.tsx         # Real-time search input with / shortcut
+│   │   └── SortButtons.tsx       # Segmented sort pill control
+│   ├── dialogs/
+│   │   └── ConfirmDialog.tsx     # Delete confirmation dialog
+│   ├── Filtering.tsx             # Orchestrator: filter + sort + display pipeline
+│   ├── form/
+│   │   ├── FormActions.tsx       # Form submit/cancel buttons
+│   │   ├── FormField.tsx         # Reusable form input with validation
+│   │   └── StudentForm.tsx       # Add/Edit student modal form
+│   ├── layout/
+│   │   ├── Background.tsx        # Animated gradient orbs + pattern overlay
+│   │   ├── CardSurface.tsx       # Shared glassmorphism container
+│   │   ├── Header.tsx            # App header with brand + dark-mode toggle
+│   │   └── Modal.tsx             # Modal wrapper with backdrop + accessibility
+│   └── students/
+│       ├── AccentStripe.tsx       # Top accent colour stripe
+│       ├── EmptyState.tsx         # "No students" illustration
+│       ├── HoverOverlay.tsx       # Card-hover colour wash
+│       ├── MetaTile.tsx           # Age/year stat tile with icon
+│       ├── StudentActionButtons.tsx # Edit/Delete icon buttons
+│       ├── StudentAvatar.tsx      # Coloured initial avatar
+│       ├── StudentCard.tsx        # Individual student display card
+│       ├── StudentGrid.tsx        # Responsive card grid
+│       └── StudentNameId.tsx      # Name + ID display
+├── constants/
+│   ├── animations.ts             # Stagger timing constants
+│   ├── colors.ts                 # Theme colour tokens
+│   └── students.ts               # Form field configuration
+├── hooks/
+│   ├── useAppState.ts            # Top-level CRUD + modal state
+│   ├── useBodyScrollLock.ts      # Lock body scroll when modal is open
+│   ├── useFilterState.ts         # Search + sort UI state
+│   ├── useFocusTrap.ts           # Trap Tab focus inside a container
+│   ├── useGlobalKeydown.ts       # Global keyboard shortcut listener
+│   ├── useLocalStorage.ts        # Persist state to localStorage
+│   └── useRestoreFocus.ts        # Restore focus on unmount
+├── types/
+│   ├── Student.ts                # Student & StudentFormData interfaces
+│   └── index.ts                  # Type exports
+├── utils/
+│   ├── filterUtils.ts            # Search/filter logic
+│   ├── sortUtils.ts              # Sorting algorithms + constants
+│   ├── studentUtils.ts           # Student creation + hue derivation
+│   ├── validation.ts             # Form field validation rules
+│   └── index.ts                  # Re-exports
+├── Student.ts                    # Mock student seed data
+├── App.tsx                       # Main application component
+├── main.tsx                      # Application entry point
+└── index.css                     # Global styles + Tailwind directives
+```
+
+---
 
 ## 🛠 Tech Stack
 
-### Core Technologies
+### Core
 
-- **[React 19](https://react.dev/)** - Modern React with concurrent features
-- **[TypeScript](https://www.typescriptlang.org/)** - Type-safe JavaScript
-- **[Vite](https://vitejs.dev/)** - Fast build tool and development server
-- **[Tailwind CSS](https://tailwindcss.com/)** - Utility-first CSS framework
+| Technology | Version | Purpose |
+|-----------|---------|---------|
+| [React](https://react.dev/) | 19.2.1 | UI framework |
+| [TypeScript](https://www.typescriptlang.org/) | 5.9.3 | Type safety |
+| [Vite](https://vitejs.dev/) | 8.1 | Build tool & dev server |
+| [Tailwind CSS](https://tailwindcss.com/) | 4.1 | Utility-first CSS |
 
-### UI & Styling
+### UI & Icons
 
-- **Glassmorphism Effects** - Backdrop blur and transparency
-- **Custom Animations** - CSS transitions and transforms
-- **Responsive Grid** - CSS Grid and Flexbox layouts
-- **Dark Mode** - CSS custom properties and React state
+- [react-icons](https://react-icons.github.io/react-icons/) — Icon component library (Font Awesome, etc.)
+- [@fortawesome/*](https://fontawesome.com/) — Font Awesome 7 SVG icon set
+- **CSS Glassmorphism** — `backdrop-blur`, semi-transparent backgrounds, subtle borders
+- **Custom CSS** — Global styles with CSS custom properties, dark-mode class toggling
 
 ### Development Tools
 
-- **ESLint** - Code linting and formatting
-- **TypeScript Compiler** - Type checking
-- **Vite Dev Server** - Hot module replacement
-- **npm scripts** - Build and development automation
+| Tool | Purpose |
+|------|---------|
+| ESLint | Code linting & formatting |
+| TypeScript Compiler | Type checking (`tsc --noEmit`) |
+| Husky | Git hooks manager |
+| commitlint | Conventional commit enforcement |
+| lint-staged | Pre-commit linting & type-checking |
+
+---
 
 ## 🎯 Usage
 
 ### Adding a Student
 
-1. Click the **"Add Student"** button
-2. Fill in the student's name, age, and year
-3. Click **"Add Student"** to save
+- Click **Add Student** (or press `C`)
+- Fill in the student's name, age, and year
+- Click **Add Student** to save
 
 ### Editing a Student
 
-1. Click the **Edit** button on any student card
-2. Modify the student information
-3. Click **"Update Student"** to save changes
+- Click on any student card, or press **Enter**/**Space** when focused
+- Modify the student information
+- Click **Update Student** to save changes
+
+### Deleting a Student
+
+- Click the **trash icon** on any student card
+- Confirm the deletion in the confirmation dialog
 
 ### Searching Students
 
-- Use the search bar to filter students by name, age, or year
-- Search is performed in real-time as you type
+- Type in the search bar to filter students in real-time
+- Press `/` to quickly focus the search bar
 
 ### Sorting Students
 
-- Click the **Name**, **Age**, or **Year** buttons to sort
-- Click again to toggle between ascending and descending order
+- Click **Name**, **Age**, or **Year** in the segmented sort control
+- Click the same field again to toggle ascending/descending order
+- A **Reset** button appears when any filter/sort is active
 
-### Dark Mode Toggle
+### Dark Mode
 
-- Click the sun/moon icon in the header to switch themes
-- Your preference is maintained across sessions
+- Click the **sun/moon icon** in the header to toggle themes
+- Preference is applied immediately to the `<html>` element
+
+---
 
 ## 🔧 Available Scripts
 
-| Command           | Description                          |
-| ----------------- | ------------------------------------ |
-| `npm run dev`     | Start the development server         |
-| `npm run build`   | Build the app for production         |
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start the development server (HMR) |
+| `npm run build` | Build the app for production |
 | `npm run preview` | Preview the production build locally |
-| `npm run lint`    | Run ESLint for code quality checks   |
+| `npm run lint` | Run ESLint for code quality checks |
+| `npm run lint:fix` | Run ESLint with auto-fix |
+| `npm run typecheck` | Run TypeScript type-checking (`tsc --noEmit`) |
+| `npm run prepare` | Set up Husky git hooks |
 
-## 🌟 Key Features Explained
+---
 
-### Glassmorphism Design
+## 🌟 Architecture Highlights
 
-The application uses modern glassmorphism effects with:
+### Custom Hooks
 
-- `backdrop-blur-xl` for frosted glass appearance
-- Semi-transparent backgrounds with subtle borders
-- Smooth animations and hover effects
+The application follows a **hooks-driven architecture** where all stateful logic is extracted from components into custom hooks:
 
-### Type Safety
+- **`useAppState`** — Owns the entire top-level state: student list (via `useLocalStorage`), modal visibility (form + confirm dialog), and dark mode. Returns memoised CRUD handlers.
+- **`useFilterState`** — Encapsulates search/sort UI state with derived computed values (`filteredStudents`, `sortedStudents`, `filtersActive`).
+- **`useFocusTrap`** / **`useRestoreFocus`** — Modal accessibility: traps Tab cycling and restores focus on close.
+- **`useGlobalKeydown`** — Declarative global keyboard shortcuts with intelligent modifier/editable-element guards.
+- **`useLocalStorage`** — Generic hook for persisting React state to `localStorage`.
+- **`useBodyScrollLock`** — Prevents background scrolling when a modal is open.
 
-Full TypeScript implementation ensures:
+### Accessibility
 
-- Compile-time error checking
-- IntelliSense support in your IDE
-- Self-documenting code with interfaces
+- Every modal (`StudentForm`, `ConfirmDialog`) uses a **focus trap** + **focus restoration**
+- The main page content receives `inert` + `aria-hidden` when a modal is open
+- Cards are `role="button"` with keyboard support (Enter/Space)
+- All interactive elements have `aria-label`, `aria-pressed`, or `aria-describedby` as appropriate
 
-### Performance
-
-Optimized for speed with:
-
-- Vite's fast HMR (Hot Module Replacement)
-- Tree-shaking for smaller bundle sizes
-- Lazy loading and code splitting
+---
 
 ## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
+3. Commit with conventional commit messages (`git commit -m 'feat: add amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## 🙏 Acknowledgments
 
-- **React Team** for the amazing React framework
+- **React Team** for the React 19 framework
 - **Tailwind CSS** for the utility-first CSS framework
 - **Vite Team** for the lightning-fast build tool
-- **FontAwesome** for the beautiful icons
+- **FontAwesome** & **react-icons** for the icon sets
 
 ---
 
