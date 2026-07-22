@@ -1,11 +1,12 @@
 import React, { useRef } from "react";
 import { FaExclamationTriangle } from "react-icons/fa";
 import Modal from "@/components/layout/Modal";
+import ActionButton from "@/components/buttons/ActionButton";
+import CancelButton from "@/components/buttons/CancelButton";
 import { useGlobalKeydown } from "@/hooks/useGlobalKeydown";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 import { useRestoreFocus } from "@/hooks/useRestoreFocus";
-
-type Variant = "danger" | "primary";
+import type { ActionVariant } from "@/components/buttons/ActionButton";
 
 interface ConfirmDialogProps {
   /** Bold heading rendered at the top of the panel. */
@@ -25,7 +26,7 @@ interface ConfirmDialogProps {
    * - `danger` (default) — red, with a warning icon. For destructive actions.
    * - `primary` — pink, no icon. For non-destructive confirmation asks.
    */
-  variant?: Variant;
+  variant?: ActionVariant;
   /**
    * Override the inner-panel className. Useful for a wider dialog
    * (e.g. a terms-of-service prompt). Defaults to the narrow
@@ -67,11 +68,6 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   // Escape behaviour so Esc has one consistent meaning app-wide.
   useGlobalKeydown("Escape", () => onCancel(), { skipWhenEditable: false });
 
-  const confirmClasses =
-    variant === "danger"
-      ? "flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-3 rounded-2xl transition-all duration-300 shadow-md shadow-red-500/20 hover:shadow-lg hover:shadow-red-500/30 hover:-translate-y-0.5 focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50 dark:focus-visible:ring-offset-slate-950"
-      : "flex-1 bg-pink-500 hover:bg-pink-600 text-white font-semibold py-3 rounded-2xl transition-all duration-300 shadow-md shadow-pink-500/20 hover:shadow-lg hover:shadow-pink-500/30 hover:-translate-y-0.5 focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50 dark:focus-visible:ring-offset-slate-950";
-
   return (
     <Modal
       contentRef={dialogRef}
@@ -105,16 +101,10 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
       </div>
 
       <div className="flex flex-col-reverse sm:flex-row gap-3 pt-6">
-        <button
-          type="button"
-          onClick={onCancel}
-          className="px-6 py-3 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold rounded-2xl transition-all duration-300 border border-slate-200 dark:border-slate-700 focus-ring"
-        >
-          {cancelLabel}
-        </button>
-        <button type="button" onClick={onConfirm} className={confirmClasses}>
+        <CancelButton onClick={onCancel}>{cancelLabel}</CancelButton>
+        <ActionButton variant={variant} onClick={onConfirm}>
           {confirmLabel}
-        </button>
+        </ActionButton>
       </div>
     </Modal>
   );
