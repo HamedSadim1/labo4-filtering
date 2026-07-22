@@ -86,12 +86,14 @@ const StudentCard: React.FC<StudentCardProps> = ({
           label="Age"
           value={student.age}
           unit="yrs"
+          description={`${student.age} yrs`}
         />
         <MetaTile
           icon={<FaUserGraduate aria-hidden />}
           label="Year"
           value={student.year}
           unit="programme"
+          description={`${student.year} programme`}
         />
       </div>
     </div>
