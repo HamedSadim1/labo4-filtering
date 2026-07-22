@@ -52,3 +52,29 @@ code {
 .animate-modal {
   animation: modal-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* Staggered card mount: each StudentCard sets animation-delay to its
+   grid index * 50ms so the list fades up sequentially instead of in a
+   single hard cut. `backwards` keeps the starting frame applied during
+   the delay so cards remain invisible until their turn arrives. */
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-card {
+  animation: card-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-card,
+  .animate-modal {
+    animation: none;
+  }
+}
