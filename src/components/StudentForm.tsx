@@ -94,8 +94,11 @@ const StudentForm: React.FC<StudentFormProps> = ({
       );
       if (focusables.length === 0) return;
 
-      const first = focusables[0];
-      const last = focusables[focusables.length - 1];
+      // The empty-array guard above proves both ends are defined. The `!`
+      // assertions are required because `noUncheckedIndexedAccess` widens
+      // index access to `T | undefined`.
+      const first = focusables[0]!;
+      const last = focusables[focusables.length - 1]!;
       const active = document.activeElement as HTMLElement | null;
       const currentIndex = active ? focusables.indexOf(active) : -1;
 
@@ -185,6 +188,8 @@ const StudentForm: React.FC<StudentFormProps> = ({
         </div>
 
         <form onSubmit={handleSubmit} noValidate>
+          {/* exactOptionalPropertyTypes: omit the `error` prop entirely when
+              there is no message, instead of passing `error={undefined}`. */}
           <FormField
             label="Name"
             type="text"
@@ -193,7 +198,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
             onChange={handleChange}
             placeholder="Enter student name"
             required
-            error={errors.name}
+            {...(errors.name && { error: errors.name })}
           />
 
           <FormField
@@ -205,7 +210,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
             placeholder="Enter age"
             required
             min="1"
-            error={errors.age}
+            {...(errors.age && { error: errors.age })}
           />
 
           <FormField
@@ -217,7 +222,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
             placeholder="Enter year"
             required
             min="1"
-            error={errors.year}
+            {...(errors.year && { error: errors.year })}
           />
 
           <FormActions isEditing={!!student} onCancel={onClose} />

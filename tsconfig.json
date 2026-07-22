@@ -18,7 +18,13 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    // Index signature access returns T | undefined so callers must handle the
+    // possibility that an index is out of bounds.
+    "noUncheckedIndexedAccess": true,
+    // Optional properties cannot be explicitly assigned undefined; must be
+    // omitted entirely if no value is provided.
+    "exactOptionalPropertyTypes": true
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
