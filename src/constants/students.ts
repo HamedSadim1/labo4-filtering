@@ -44,6 +44,15 @@ export interface StudentFieldConfig {
   validate: (value: string) => string | undefined;
 }
 
+/**
+ * Number of trailing characters shown in the compact student ID
+ * display (`StudentNameId.tsx`). A length of 6 keeps IDs short and
+ * scannable while still providing a decent collision-resistance
+ * window for the visible grid (GitHub-style / Git commit short-SHA
+ * pattern).
+ */
+export const ID_TRUNCATE_LENGTH = 6 as const;
+
 export const STUDENT_FIELD_CONFIG: readonly StudentFieldConfig[] = [
   {
     name: "name",

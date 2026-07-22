@@ -1,5 +1,6 @@
 import { generate as shortidGenerate } from "shortid";
 import { Student, StudentFormData } from "@/types/Student";
+import { HASH_MULTIPLIER } from "@/constants/colors";
 
 /**
  * Generate a fresh unique student id. Uses `shortid` (already a project
@@ -35,7 +36,7 @@ const huePalette = [340, 282, 220, 196, 25, 312] as const;
 export const getStudentHue = (name: string): number => {
   let hash = 0;
   for (let i = 0; i < name.length; i++) {
-    hash = (hash * 31 + name.charCodeAt(i)) >>> 0;
+    hash = (hash * HASH_MULTIPLIER + name.charCodeAt(i)) >>> 0;
   }
   // noUncheckedIndexedAccess widens palette[] to number | undefined;
   // the static fallback below keeps the return type narrowly `number`.

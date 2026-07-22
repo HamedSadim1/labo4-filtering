@@ -28,3 +28,13 @@ export const HUE_OFFSET_DEGREES = 32;
 
 /** Geometry of the radial-gradient hover overlay (per StudentCard.tsx). */
 export const HOVER_OVERLAY_RADIUS = "420px circle at 50% 0%";
+
+/**
+ * Multiplier used in the Jenkins-like hash inside `getStudentHue`
+ * (`src/utils/studentUtils.ts`). Sticking to 31 produces a well-
+ * distributed set of hue indices across the 6-element huePalette;
+ * changing it would change every card's accent colour (harmless
+ * but visually disruptive, so treat as a design token, not a
+ * refactor constant).
+ */
+export const HASH_MULTIPLIER = 31 as const;

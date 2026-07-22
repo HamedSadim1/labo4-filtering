@@ -73,10 +73,10 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
       contentRef={dialogRef}
       onClose={onCancel}
       ariaLabelledBy="confirm-dialog-title"
-      panelClassName={
-        panelClassName ??
-        "animate-modal w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200 dark:border-slate-700"
-      }
+      // When no override is provided, omit the prop entirely so
+      // Modal's internal DEFAULT_PANEL_CLASS is the single source
+      // of truth for the panel styling.
+      {...(panelClassName !== undefined && { panelClassName })}
     >
       <div className="flex items-start gap-4 mb-2">
         {variant === "danger" && (
