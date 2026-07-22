@@ -3,6 +3,7 @@ import Background from "@/components/layout/Background";
 import Filtering from "@/components/Filtering";
 import Header from "@/components/layout/Header";
 import StudentForm from "@/components/form/StudentForm";
+import ConfirmDialog from "@/components/dialogs/ConfirmDialog";
 import Students from "@/Student";
 import { StudentFormData, Student as StudentType } from "@/types/Student";
 import { createStudent } from "@/utils/studentUtils";
@@ -21,6 +22,11 @@ function App() {
     null
   );
   const [darkMode, setDarkMode] = useState<boolean>(true);
+  // Deletion now goes through a confirmation dialog. Holding the ID
+  // (not the full student) keeps the existing `onDelete: (id) => void`
+  // signature unchanged everywhere — the resolve to a name happens
+  // here in App, where the student list is already in scope.
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
 
   useEffect(() => {
     if (darkMode) {
@@ -44,8 +50,27 @@ function App() {
     }
   };
 
-  const deleteStudent = (id: string): void => {
-    setStudents(students.filter((s) => s.id !== id));
+  // Used to be a single `deleteStudent` that filtered immediately.
+  // Now split: `requestDeleteStudent` opens the confirm dialog,
+  // `confirmDeleteStudent` actually filters. The functional setter
+  // form of `setStudents((prev) => ...)` keeps `confirmDeleteStudent`
+  // resilient against closure staleness — the ID is captured once
+  // at the top of the handler.
+  const requestDeleteStudent = (id: string): void => {
+    setPendingDeleteId(id);
+  };
+
+  const cancelDelete = useCallback((): void => {
+    setPendingDeleteId(null);
+  }, []);
+
+  const confirmDeleteStudent = (): void => {
+    const id = pendingDeleteId;
+    if (!id) {
+      return;
+    }
+    setStudents((prev) => prev.filter((s) => s.id !== id));
+    setPendingDeleteId(null);
   };
 
   const handleEdit = (student: StudentType): void => {
@@ -67,18 +92,34 @@ function App() {
     handleCloseForm();
   };
 
+  // Single source of truth for "any modal is open right now" —
+  // drives the `inert`/`aria-hidden` props on the main page wrapper
+  // and ensures focus + Tab cannot leak to the background while
+  // either dialog is up.
+  const modalOpen = showForm || pendingDeleteId !== null;
+
+  // Look up the student by ID on each render. Safe fallback when the
+  // student was already removed (e.g. cross-tab sync via the
+  // useLocalStorage hook): the dialog still closes cleanly via
+  // onCancel or onConfirm even with `name` undefined.
+  const pendingDeleteName = pendingDeleteId
+    ? students.find((s) => s.id === pendingDeleteId)?.name
+    : undefined;
+
   return (
     <div className="min-h-screen py-8 relative overflow-hidden bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-50 transition-colors duration-500">
       <Background />
 
-      {/* While the modal is open, hide the main page from assistive tech
-          and pull it out of the focus order so Tab cannot leak behind the
-          dialog. `inert` covers focus + a11y tree in modern browsers;
-          `aria-hidden` is the fallback for older engines. */}
+      {/* While ANY modal is open (add/edit form or delete confirmation),
+          hide the main page from assistive tech and pull it out of the
+          focus order so Tab cannot leak behind the dialog. `inert`
+          covers focus + a11y tree in modern browsers; `aria-hidden`
+          is the fallback for older engines. The combined `modalOpen`
+          boolean keeps both flows consistent. */}
       <div
         className="relative container mx-auto px-4 z-10"
-        inert={showForm || undefined}
-        aria-hidden={showForm ? true : undefined}
+        inert={modalOpen || undefined}
+        aria-hidden={modalOpen || undefined}
       >
         <Header
           darkMode={darkMode}
@@ -91,7 +132,7 @@ function App() {
         <Filtering
           students={students}
           onEdit={handleEdit}
-          onDelete={deleteStudent}
+          onDelete={requestDeleteStudent}
           onAddNew={() => {
             setEditingStudent(null);
             setShowForm(true);
@@ -104,6 +145,30 @@ function App() {
           student={editingStudent}
           onSave={handleSave}
           onClose={handleCloseForm}
+        />
+      )}
+
+      {/* ConfirmDelete dialog: rendered only when pendingDeleteId is
+          set (i.e. after a StudentCard trash-click). The student
+          name lookup is done here, not in ConfirmDialog, so the
+          dialog stays unaware of the surrounding data model and can
+          be reused for any future confirm-anything flow. */}
+      {pendingDeleteId && (
+        <ConfirmDialog
+          title="Delete student"
+          message={
+            <>
+              Are you sure you want to delete{" "}
+              <span className="font-semibold text-slate-900 dark:text-white">
+                {pendingDeleteName ?? "this student"}
+              </span>
+              ? This action cannot be undone.
+            </>
+          }
+          confirmLabel="Delete"
+          variant="danger"
+          onConfirm={confirmDeleteStudent}
+          onCancel={cancelDelete}
         />
       )}
     </div>
