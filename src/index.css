@@ -1,5 +1,20 @@
 @import "tailwindcss";
 
+/*
+ * Design tokens declared via Tailwind v4's `@theme` directive. They
+ * become both CSS custom properties (so other CSS rules can read them
+ * with `var(--...)`) and Tailwind theme entries (so utilities can
+ * reference them in `@apply` or arbitrary-[…] values). Animation
+ * durations + easing used to be hard-coded twice across .animate-modal
+ * and .animate-card — centralising them keeps both rules in lockstep
+ * when the design language moves.
+ */
+@theme {
+  --ease-app: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-modal: 0.25s;
+  --duration-card: 0.35s;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -50,13 +65,15 @@ code {
 }
 
 .animate-modal {
-  animation: modal-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  /* duration + easing sourced from the @theme block above. */
+  animation: modal-in var(--duration-modal) var(--ease-app) forwards;
 }
 
 /* Staggered card mount: each StudentCard sets animation-delay to its
-   grid index * 50ms so the list fades up sequentially instead of in a
-   single hard cut. `backwards` keeps the starting frame applied during
-   the delay so cards remain invisible until their turn arrives. */
+   grid index × STAGGER_STEP_MS (see /constants/animations.ts) so the
+   list fades up sequentially instead of in a single hard cut.
+   `backwards` keeps the starting frame applied during the delay so
+   cards remain invisible until their turn arrives. */
 @keyframes card-in {
   from {
     opacity: 0;
@@ -69,7 +86,8 @@ code {
 }
 
 .animate-card {
-  animation: card-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  /* duration + easing sourced from the @theme block above. */
+  animation: card-in var(--duration-card) var(--ease-app) backwards;
 }
 
 @media (prefers-reduced-motion: reduce) {

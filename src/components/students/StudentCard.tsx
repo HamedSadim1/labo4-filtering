@@ -7,6 +7,14 @@ import {
 } from "react-icons/fa";
 import { Student } from "@/types/Student";
 import { getStudentHue, getStudentInitial } from "@/utils/studentUtils";
+import {
+  HSL_HOVER_TINT,
+  HSL_PRIMARY,
+  HSL_SECONDARY,
+  HOVER_OVERLAY_RADIUS,
+  HUE_OFFSET_DEGREES,
+} from "@/constants/colors";
+import { STAGGER_CAP_INDEX, STAGGER_STEP_MS } from "@/constants/animations";
 
 interface StudentCardProps {
   student: Student;
@@ -23,7 +31,9 @@ const StudentCard: React.FC<StudentCardProps> = ({
 }) => {
   // Per-card deterministic accent: warm/cool hues curated to stay inside
   // the brand pink-purple-violet-indigo family so accents never clash with
-  // the global gradient on buttons, the modal, or the page background.
+  // the global pink/purple gradient on buttons, the modal, or the page
+  // background. The saturation/lightness stop colours come from
+  // /constants/colors.ts so every card looks coherent.
   const hue = getStudentHue(student.name);
 
   const handleEdit = useCallback(() => {
@@ -40,12 +50,9 @@ const StudentCard: React.FC<StudentCardProps> = ({
     [onEdit, student]
   );
 
-  const handleInnerClick = useCallback(
-    (e: React.MouseEvent) => {
-      e.stopPropagation();
-    },
-    []
-  );
+  const handleInnerClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+  }, []);
 
   const handleEditClick = useCallback(
     (e: React.MouseEvent) => {
@@ -70,9 +77,12 @@ const StudentCard: React.FC<StudentCardProps> = ({
       onClick={handleEdit}
       onKeyDown={handleCardKeyDown}
       aria-label={`Edit ${student.name}`}
-      // Cap the stagger at 12 cards × 50ms = 600ms so a long list does
-      // not animate forever; the visual rhythm still reads as "staggered".
-      style={{ animationDelay: `${Math.min(index, 12) * 50}ms` }}
+      // Cap the stagger at STAGGER_CAP_INDEX × STAGGER_STEP_MS so a long
+      // list does not animate forever; the visual rhythm still reads as
+      // "staggered". Constants live in /constants/animations.ts.
+      style={{
+        animationDelay: `${Math.min(index, STAGGER_CAP_INDEX) * STAGGER_STEP_MS}ms`,
+      }}
       className="group relative bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 rounded-3xl p-5 shadow-md hover:shadow-2xl hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50 dark:focus-visible:ring-offset-slate-950 transition-all duration-300 motion-reduce:transition-none cursor-pointer animate-card overflow-hidden"
     >
       {/* Accent stripe: a thin gradient column on the left edge, hue
@@ -82,35 +92,36 @@ const StudentCard: React.FC<StudentCardProps> = ({
         aria-hidden
         className="absolute left-0 top-0 bottom-0 w-1 rounded-l-3xl"
         style={{
-          background: `linear-gradient(to bottom, hsl(${hue} 85% 60%), hsl(${
-            (hue + 32) % 360
-          } 80% 52%))`,
+          background: `linear-gradient(to bottom, hsl(${hue} ${HSL_PRIMARY}), hsl(${
+            (hue + HUE_OFFSET_DEGREES) % 360
+          } ${HSL_SECONDARY}))`,
         }}
       />
 
       {/* Hover overlay: pure CSS, no JS state, no mouseFollow. A soft
-          radial gradient at the top-center tied to the card's accent
-          hue. Cheap on touch devices (no handler), cheap on every
-          keyboard, and zero state in React. */}
+          radial gradient tied to the card's accent hue. Cheap on every
+          device and zero state in React. */}
       <div
         aria-hidden
         className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
         style={{
-          background: `radial-gradient(420px circle at 50% 0%, hsl(${hue} 92% 92% / 0.35), transparent 60%)`,
+          background: `radial-gradient(${HOVER_OVERLAY_RADIUS}, hsl(${hue} ${HSL_HOVER_TINT}), transparent 60%)`,
         }}
       />
 
       {/* Header row: avatar + name on the left, action icons on the
           right. The whole card is also clickable as an "edit" target
           for power users; the inner buttons remain for explicit
-          actions and to give the card proper a11y semantics. */}
+          actions and to give the card proper a11y semantics. The avatar
+          uses the same primary/secondary HSL tokens as the accent
+          stripe so the two gradients stay visually synchronised. */}
       <div className="relative flex items-start gap-3 mb-4">
         <div
           className="shrink-0 w-12 h-12 rounded-2xl flex items-center justify-center shadow-md"
           style={{
-            background: `linear-gradient(135deg, hsl(${hue} 85% 60%), hsl(${
-              (hue + 35) % 360
-            } 78% 52%))`,
+            background: `linear-gradient(135deg, hsl(${hue} ${HSL_PRIMARY}), hsl(${
+              (hue + HUE_OFFSET_DEGREES) % 360
+            } ${HSL_SECONDARY}))`,
           }}
         >
           <span className="text-xl font-bold text-white drop-shadow">

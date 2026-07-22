@@ -1,7 +1,14 @@
+import { generate as shortidGenerate } from "shortid";
 import { Student, StudentFormData } from "@/types/Student";
 
+/**
+ * Generate a fresh unique student id. Uses `shortid` (already a project
+ * dependency for the seed-data file at /Student.ts) so the live-app IDs
+ * match the format and entropy of the seed data; `Date.now()` would
+ * collide whenever `createStudent` runs twice within the same millisecond.
+ */
 export const generateStudentId = (): string => {
-  return Date.now().toString();
+  return shortidGenerate();
 };
 
 export const createStudent = (
@@ -34,5 +41,3 @@ export const getStudentHue = (name: string): number => {
   // the static fallback below keeps the return type narrowly `number`.
   return huePalette[hash % huePalette.length] ?? huePalette[0]!;
 };
-
-
