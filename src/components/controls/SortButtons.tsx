@@ -1,5 +1,5 @@
 import React from "react";
-import { SortField, SortOrder } from "../../types/Student";
+import { SortField, SortOrder } from "@/types/Student";
 
 interface SortButtonsProps {
   sortBy: SortField;

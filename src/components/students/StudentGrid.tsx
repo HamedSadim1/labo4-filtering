@@ -1,5 +1,5 @@
 import React from "react";
-import { Student } from "../../types/Student";
+import { Student } from "@/types/Student";
 import StudentCard from "./StudentCard";
 import EmptyState from "./EmptyState";
 

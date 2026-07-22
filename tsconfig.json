@@ -24,7 +24,15 @@
     "noUncheckedIndexedAccess": true,
     // Optional properties cannot be explicitly assigned undefined; must be
     // omitted entirely if no value is provided.
-    "exactOptionalPropertyTypes": true
+    "exactOptionalPropertyTypes": true,
+    // `@/*` maps to `src/*` so anywhere in the codebase can write
+    // `import { X } from "@/types/Student"` instead of multi-hop relative
+    // paths like `../../types/Student`. Mirrored in vite.config.ts so the
+    // dev server + production build resolve the same paths at runtime.
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]

@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
-import Background from "./components/layout/Background";
-import Filtering from "./components/Filtering";
-import Header from "./components/layout/Header";
-import StudentForm from "./components/form/StudentForm";
-import Students from "./Student";
-import { StudentFormData, Student as StudentType } from "./types/Student";
-import { createStudent } from "./utils/studentUtils";
+import Background from "@/components/layout/Background";
+import Filtering from "@/components/Filtering";
+import Header from "@/components/layout/Header";
+import StudentForm from "@/components/form/StudentForm";
+import Students from "@/Student";
+import { StudentFormData, Student as StudentType } from "@/types/Student";
+import { createStudent } from "@/utils/studentUtils";
 
 function App() {
   const [students, setStudents] = useState<StudentType[]>(Students);

@@ -5,8 +5,8 @@ import {
   FaTrash,
   FaUserGraduate,
 } from "react-icons/fa";
-import { Student } from "../../types/Student";
-import { getStudentHue, getStudentInitial } from "../../utils/studentUtils";
+import { Student } from "@/types/Student";
+import { getStudentHue, getStudentInitial } from "@/utils/studentUtils";
 
 interface StudentCardProps {
   student: Student;

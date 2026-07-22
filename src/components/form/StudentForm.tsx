@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { FaTimes } from "react-icons/fa";
-import { Student, StudentFormData } from "../../types/Student";
+import { Student, StudentFormData } from "@/types/Student";
 import FormActions from "./FormActions";
 import FormField from "./FormField";
 
