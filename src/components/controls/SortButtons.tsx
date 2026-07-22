@@ -43,7 +43,7 @@ const SortButtons: React.FC<SortButtonsProps> = ({
             onClick={() => onSort(field)}
             aria-pressed={isActive}
             aria-label={labelFor(field)}
-            className={`inline-flex items-center gap-1 px-4 sm:px-5 py-2.5 rounded-full text-sm sm:text-base font-semibold capitalize transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500 ${
+            className={`inline-flex items-center gap-1 px-4 sm:px-5 py-2.5 rounded-full text-sm sm:text-base font-semibold capitalize transition-colors duration-200 focus-ring ${
               isActive
                 ? "bg-white dark:bg-slate-900 text-pink-600 dark:text-pink-300 shadow-sm"
                 : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"

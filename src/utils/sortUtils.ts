@@ -1,11 +1,16 @@
 import { Student, SortField, SortOrder } from "@/types/Student";
 
 /**
- * The canonical list of sort options, exposed for the segmented control
- * in `SortButtons.tsx`. Order here is the visual order on the bar.
- * Declared `readonly` so consumers can't mutate the shared array at runtime.
+ * The canonical list of sort options for the segmented control in
+ * `SortButtons.tsx`. Kept as a `SORT_FIELDS` export so that the
+ * existing barrel-import in `SortButtons.tsx` keeps working
+ * (`import { SORT_FIELDS } from "@/utils"`), but the array itself
+ * lives in `@/constants/students.ts` and is now the single source of
+ * truth — both sort and search consume the same list, so adding a
+ * "grade" field, for example, lights up sorting AND searching
+ * simultaneously.
  */
-export const SORT_FIELDS: readonly SortField[] = ["name", "age", "year"] as const;
+export { STUDENT_FIELDS as SORT_FIELDS } from "@/constants/students";
 
 type Comparator = (a: Student, b: Student) => number;
 

@@ -83,7 +83,7 @@ const StudentCard: React.FC<StudentCardProps> = ({
       style={{
         animationDelay: `${Math.min(index, STAGGER_CAP_INDEX) * STAGGER_STEP_MS}ms`,
       }}
-      className="group relative bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 rounded-3xl p-5 shadow-md hover:shadow-2xl hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50 dark:focus-visible:ring-offset-slate-950 transition-all duration-300 motion-reduce:transition-none cursor-pointer animate-card overflow-hidden"
+      className="group relative bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 rounded-3xl p-5 shadow-md hover:shadow-2xl hover:-translate-y-1 focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50 dark:focus-visible:ring-offset-slate-950 transition-all duration-300 motion-reduce:transition-none cursor-pointer animate-card overflow-hidden"
     >
       {/* Accent stripe: a thin gradient column on the left edge, hue
           derived from the student name so each card feels personalised
@@ -144,7 +144,7 @@ const StudentCard: React.FC<StudentCardProps> = ({
             type="button"
             onClick={handleEditClick}
             aria-label={`Edit ${student.name}`}
-            className="p-2 rounded-lg text-slate-400 hover:text-pink-600 hover:bg-pink-50 dark:hover:bg-pink-500/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500"
+            className="p-2 rounded-lg text-slate-400 hover:text-pink-600 hover:bg-pink-50 dark:hover:bg-pink-500/10 transition-colors focus-ring"
           >
             <FaEdit aria-hidden />
           </button>

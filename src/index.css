@@ -90,6 +90,25 @@ code {
   animation: card-in var(--duration-card) var(--ease-app) backwards;
 }
 
+/*
+ * Focus ring utility — replaces the repeated
+ * `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500`
+ * chain that appears on every interactive element (buttons, inputs,
+ * the sortbar segments, the modal close button, etc.). Centralising
+ * it means the brand focus colour can shift in one place; it also
+ * keeps the JSX markup focused on layout and intent rather than
+ * accessibility plumbing. Note: elements that need extra ring-offset
+ * contrast against a coloured background (AddStudentButton's primary
+ * pink button, the StudentCard card-as-button) keep their
+ * ring-offset utilities inline — `.focus-ring` deliberately does not
+ * bake offset in because most uses don't want it.
+ */
+@layer utilities {
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   /* Blanket rule for every element so app chrome (buttons, inputs,
      segmented controls, etc.) honours the user's preferred-motion

@@ -16,7 +16,7 @@ const AddStudentButton: React.FC<AddStudentButtonProps> = ({ onClick }) => {
       onClick={onClick}
       aria-label="Add a new student"
       title="Add a new student (press C)"
-      className="inline-flex items-center justify-center gap-2 bg-pink-500 hover:bg-pink-600 text-white px-4 sm:px-5 py-3 rounded-2xl font-semibold shadow-md shadow-pink-500/20 hover:shadow-lg hover:shadow-pink-500/30 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50 dark:focus-visible:ring-offset-slate-950"
+      className="inline-flex items-center justify-center gap-2 bg-pink-500 hover:bg-pink-600 text-white px-4 sm:px-5 py-3 rounded-2xl font-semibold shadow-md shadow-pink-500/20 hover:shadow-lg hover:shadow-pink-500/30 transition-all duration-300 focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50 dark:focus-visible:ring-offset-slate-950"
     >
       <FaPlus aria-hidden focusable={false} />
       <span>Add Student</span>

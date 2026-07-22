@@ -51,7 +51,7 @@ const Header: React.FC<HeaderProps> = ({ darkMode, onToggleDarkMode }) => {
           <button
             onClick={onToggleDarkMode}
             aria-label="Toggle dark mode"
-            className="relative w-12 h-12 shrink-0 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors duration-300 shadow-sm border border-slate-200 dark:border-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500"
+            className="relative w-12 h-12 shrink-0 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors duration-300 shadow-sm border border-slate-200 dark:border-slate-700 focus-ring"
           >
             <FaSun
               aria-hidden

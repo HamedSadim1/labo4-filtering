@@ -43,7 +43,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ searchText, onSearchChange }) => 
             type="button"
             onClick={() => onSearchChange("")}
             aria-label="Clear search"
-            className="p-1.5 rounded-md text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500"
+            className="p-1.5 rounded-md text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors duration-200 focus-ring"
           >
             <FaTimes aria-hidden focusable={false} />
           </button>
