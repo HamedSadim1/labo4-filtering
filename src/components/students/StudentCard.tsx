@@ -15,6 +15,7 @@ import {
   HUE_OFFSET_DEGREES,
 } from "@/constants/colors";
 import { STAGGER_CAP_INDEX, STAGGER_STEP_MS } from "@/constants/animations";
+import IconButton from "@/components/buttons/IconButton";
 
 interface StudentCardProps {
   student: Student;
@@ -140,22 +141,20 @@ const StudentCard: React.FC<StudentCardProps> = ({
           </p>
         </div>
         <div className="flex gap-1 -mr-1 -mt-1">
-          <button
-            type="button"
+          <IconButton
+            variant="pink"
+            ariaLabel={`Edit ${student.name}`}
             onClick={handleEditClick}
-            aria-label={`Edit ${student.name}`}
-            className="p-2 rounded-lg text-slate-400 hover:text-pink-600 hover:bg-pink-50 dark:hover:bg-pink-500/10 transition-colors focus-ring"
           >
             <FaEdit aria-hidden />
-          </button>
-          <button
-            type="button"
+          </IconButton>
+          <IconButton
+            variant="red"
+            ariaLabel={`Delete ${student.name}`}
             onClick={handleDeleteClick}
-            aria-label={`Delete ${student.name}`}
-            className="p-2 rounded-lg text-slate-500 hover:text-red-600 hover:bg-red-50 dark:text-slate-400 dark:hover:text-red-300 dark:hover:bg-red-500/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
           >
             <FaTrash aria-hidden />
-          </button>
+          </IconButton>
         </div>
       </div>
 

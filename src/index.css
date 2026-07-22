@@ -107,6 +107,14 @@ code {
   .focus-ring {
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500;
   }
+
+  /* Red variant of `.focus-ring` — used by the IconButton red variant
+     (StudentCard delete) so destructive icon buttons get a red focus
+     ring to match their hover tint, just like the original inline
+     `<button>` did before the IconButton extraction. */
+  .focus-ring-red {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
