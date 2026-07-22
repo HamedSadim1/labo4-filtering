@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Student as StudentType, StudentFormData } from "@/types/Student";
 import { createStudent } from "@/utils/studentUtils";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { LOCAL_STORAGE_KEY } from "@/constants/students";
 import Students from "@/Student";
 
 export interface UseAppStateResult {
@@ -64,7 +65,7 @@ export const useAppState = (): UseAppStateResult => {
   // ── State ─────────────────────────────────────────────────────
 
   const [students, setStudents] = useLocalStorage<StudentType[]>(
-    "labo4-filtering:students:v1",
+    LOCAL_STORAGE_KEY,
     Students
   );
   const [showForm, setShowForm] = useState(false);

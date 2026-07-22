@@ -45,6 +45,15 @@ export interface StudentFieldConfig {
 }
 
 /**
+ * localStorage key used by `useLocalStorage<Student[]>` in
+ * `useAppState`. The `:v1` suffix enables schema versioning: if
+ * the stored shape ever changes (e.g. a new field is added to
+ * `Student`), bump the version suffix to discard stale data
+ * gracefully instead of crashing on JSON parse.
+ */
+export const LOCAL_STORAGE_KEY = "labo4-filtering:students:v1";
+
+/**
  * Number of trailing characters shown in the compact student ID
  * display (`StudentNameId.tsx`). A length of 6 keeps IDs short and
  * scannable while still providing a decent collision-resistance
