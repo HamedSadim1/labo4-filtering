@@ -7,59 +7,55 @@ interface SortButtonsProps {
   onSort: (field: SortField) => void;
 }
 
+// Segmented control: a single rounded pill containing the three sort
+// options. macOS / Stripe / Linear pattern. Each segment picks up
+// `aria-pressed` so screen readers convey the current selection, and
+// the active segment also gets the up/down arrow indicator. The
+// background container is a soft slate so the active white-on-slate
+// segment reads as a push-button without needing an explicit
+// per-segment hover state — Tailwind handles the colour swap.
 const SortButtons: React.FC<SortButtonsProps> = ({
   sortBy,
   sortOrder,
   onSort,
 }) => {
-  const getButtonClass = (field: SortField) => {
-    const isActive = sortBy === field;
-    return `px-4 py-2 rounded-2xl transition-all duration-300 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500 ${
-      isActive
-        ? "bg-pink-500 text-white border border-pink-500 shadow-md shadow-pink-500/20 hover:bg-pink-600"
-        : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 hover:-translate-y-0.5"
-    }`;
-  };
+  const fields: SortField[] = ["name", "age", "year"];
 
-  const getSortLabel = (field: SortField) => {
-    if (sortBy === field) {
-      return `Change ${field} sort to ${sortOrder === "asc" ? "descending" : "ascending"}`;
-    }
-    return `Sort by ${field} ascending`;
-  };
+  const labelFor = (field: SortField): string =>
+    sortBy === field
+      ? `Change ${field} sort to ${sortOrder === "asc" ? "descending" : "ascending"}`
+      : `Sort by ${field} ascending`;
 
   return (
-    <div className="flex flex-wrap gap-3 mb-6 justify-center">
-      <button
-        onClick={() => onSort("name")}
-        className={getButtonClass("name")}
-        aria-label={getSortLabel("name")}
-      >
-        Name{" "}
-        {sortBy === "name" && (
-          <span aria-hidden="true">{sortOrder === "asc" ? "↑" : "↓"}</span>
-        )}
-      </button>
-      <button
-        onClick={() => onSort("age")}
-        className={getButtonClass("age")}
-        aria-label={getSortLabel("age")}
-      >
-        Age{" "}
-        {sortBy === "age" && (
-          <span aria-hidden="true">{sortOrder === "asc" ? "↑" : "↓"}</span>
-        )}
-      </button>
-      <button
-        onClick={() => onSort("year")}
-        className={getButtonClass("year")}
-        aria-label={getSortLabel("year")}
-      >
-        Year{" "}
-        {sortBy === "year" && (
-          <span aria-hidden="true">{sortOrder === "asc" ? "↑" : "↓"}</span>
-        )}
-      </button>
+    <div
+      role="group"
+      aria-label="Sort students"
+      className="inline-flex items-center rounded-full bg-slate-100 dark:bg-slate-800 p-1 shadow-sm border border-slate-200 dark:border-slate-700 transition-colors duration-200"
+    >
+      {fields.map((field) => {
+        const isActive = sortBy === field;
+        return (
+          <button
+            key={field}
+            type="button"
+            onClick={() => onSort(field)}
+            aria-pressed={isActive}
+            aria-label={labelFor(field)}
+            className={`inline-flex items-center gap-1 px-4 sm:px-5 py-2.5 rounded-full text-sm sm:text-base font-semibold capitalize transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-500 ${
+              isActive
+                ? "bg-white dark:bg-slate-900 text-pink-600 dark:text-pink-300 shadow-sm"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+            }`}
+          >
+            {field}
+            {isActive && (
+              <span aria-hidden="true" className="text-xs">
+                {sortOrder === "asc" ? "↑" : "↓"}
+              </span>
+            )}
+          </button>
+        );
+      })}
     </div>
   );
 };

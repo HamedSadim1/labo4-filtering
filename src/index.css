@@ -73,6 +73,21 @@ code {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  /* Blanket rule for every element so app chrome (buttons, inputs,
+     segmented controls, etc.) honours the user's preferred-motion
+     setting without needing a per-component `motion-reduce:` modifier.
+     `animation-duration` and `transition-duration` both reduce to
+     ~0ms while leaving the animation/transition names intact so that
+     `animation-fill-mode: backwards` on `.animate-card` still applies
+     and the final state lands instantly. */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
   .animate-card,
   .animate-modal {
     animation: none;

@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import AddStudentButton from "./components/AddStudentButton";
 import Background from "./components/Background";
 import Filtering from "./components/Filtering";
 import Header from "./components/Header";
@@ -79,12 +78,17 @@ function App() {
           onToggleDarkMode={() => setDarkMode(!darkMode)}
         />
 
-        <AddStudentButton onClick={() => setShowForm(true)} />
-
+        {/* Reset editingStudent before opening so a stray C-key (or
+            a click) while editing another student doesn't re-open
+            the form in update mode by accident. */}
         <Filtering
           students={students}
           onEdit={handleEdit}
           onDelete={deleteStudent}
+          onAddNew={() => {
+            setEditingStudent(null);
+            setShowForm(true);
+          }}
         />
       </div>
 
