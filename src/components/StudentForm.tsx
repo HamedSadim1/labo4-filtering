@@ -16,6 +16,19 @@ const initialFormData: StudentFormData = {
   year: "",
 };
 
+const validatePositiveNumber = (
+  label: string,
+  value: string
+): string | undefined => {
+  if (!value.trim()) {
+    return `${label} is required`;
+  }
+  if (Number(value) <= 0) {
+    return `${label} must be greater than 0`;
+  }
+  return undefined;
+};
+
 const StudentForm: React.FC<StudentFormProps> = ({
   student,
   onSave,
@@ -52,15 +65,13 @@ const StudentForm: React.FC<StudentFormProps> = ({
     if (!data.name.trim()) {
       nextErrors.name = "Name is required";
     }
-    if (!data.age.trim()) {
-      nextErrors.age = "Age is required";
-    } else if (Number(data.age) <= 0) {
-      nextErrors.age = "Age must be greater than 0";
+    const ageError = validatePositiveNumber("Age", data.age);
+    if (ageError) {
+      nextErrors.age = ageError;
     }
-    if (!data.year.trim()) {
-      nextErrors.year = "Year is required";
-    } else if (Number(data.year) <= 0) {
-      nextErrors.year = "Year must be greater than 0";
+    const yearError = validatePositiveNumber("Year", data.year);
+    if (yearError) {
+      nextErrors.year = yearError;
     }
     return nextErrors;
   };
