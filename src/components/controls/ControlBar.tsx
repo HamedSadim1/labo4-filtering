@@ -44,7 +44,10 @@ const ControlBar: React.FC<ControlBarProps> = ({
   filtersActive,
   onResetFilters,
 }) => (
-  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-6">
+  <nav
+    aria-label="Search and filter controls"
+    className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-6"
+  >
     <SearchBar searchText={searchText} onSearchChange={onSearchChange} />
     <SortButtons sortBy={sortBy} sortOrder={sortOrder} onSort={onSort} />
 
@@ -56,7 +59,7 @@ const ControlBar: React.FC<ControlBarProps> = ({
     )}
 
     <AddStudentButton onClick={onAddNew} />
-  </div>
+  </nav>
 );
 
 export default ControlBar;

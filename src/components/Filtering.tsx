@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import { version } from "../../package.json";
 import { Student } from "@/types/Student";
 import { useFilterState } from "@/hooks/useFilterState";
 import { useGlobalKeydown } from "@/hooks/useGlobalKeydown";
@@ -68,6 +69,10 @@ const Filtering: React.FC<FilteringProps> = ({
         onEdit={onEdit}
         onDelete={onDelete}
       />
+
+      <footer className="mt-12 pt-6 border-t border-slate-200 dark:border-slate-800 text-center text-xs text-slate-400 dark:text-slate-500">
+        v{version} &mdash; Student Management System
+      </footer>
     </div>
   );
 };

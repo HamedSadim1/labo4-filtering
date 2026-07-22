@@ -15,21 +15,27 @@ const StudentGrid: React.FC<StudentGridProps> = ({
   onDelete,
 }) => {
   if (students.length === 0) {
-    return <EmptyState />;
+    return (
+      <main>
+        <EmptyState />
+      </main>
+    );
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {students.map((student, index) => (
-        <StudentCard
-          key={student.id}
-          student={student}
-          index={index}
-          onEdit={onEdit}
-          onDelete={onDelete}
-        />
-      ))}
-    </div>
+    <main>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {students.map((student, index) => (
+          <StudentCard
+            key={student.id}
+            student={student}
+            index={index}
+            onEdit={onEdit}
+            onDelete={onDelete}
+          />
+        ))}
+      </div>
+    </main>
   );
 };
 
