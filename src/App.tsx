@@ -6,9 +6,16 @@ import StudentForm from "@/components/form/StudentForm";
 import Students from "@/Student";
 import { StudentFormData, Student as StudentType } from "@/types/Student";
 import { createStudent } from "@/utils/studentUtils";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 
 function App() {
-  const [students, setStudents] = useState<StudentType[]>(Students);
+  // Persist students state across reloads. The `:v1` suffix is a
+  // schema-version guard: bump to `:v2` if the Student shape ever changes
+  // so old data is ignored instead of crashing on incompatible JSON.
+  const [students, setStudents] = useLocalStorage<StudentType[]>(
+    "labo4-filtering:students:v1",
+    Students
+  );
   const [showForm, setShowForm] = useState<boolean>(false);
   const [editingStudent, setEditingStudent] = useState<StudentType | null>(
     null
