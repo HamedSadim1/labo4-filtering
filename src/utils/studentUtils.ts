@@ -20,6 +20,4 @@ export const getStudentInitial = (name: string): string => {
   return name.charAt(0).toUpperCase();
 };
 
-export const isValidStudentData = (formData: StudentFormData): boolean => {
-  return !!(formData.name && formData.age && formData.year);
-};
+

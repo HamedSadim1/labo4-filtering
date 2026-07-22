@@ -12,14 +12,18 @@ const SearchBar: React.FC<SearchBarProps> = ({
 }) => {
   return (
     <div className="mb-6">
-      <div className="relative">
-        <FaSearch className="absolute left-4 top-4 text-white/60 dark:text-white/40 z-10" />
+      <div className="relative group">
+        <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 transition-colors group-focus-within:text-pink-500" />
         <input
+          id="search"
+          name="search"
           type="text"
           placeholder="Search students..."
           value={searchText}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="w-full pl-12 pr-4 py-3 backdrop-blur-xl bg-white/10 dark:bg-black/10 border border-white/20 dark:border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-pink-400/50 focus:border-pink-400/50 text-white placeholder-white/50 transition-all duration-300 shadow-2xl"
+          aria-label="Search students"
+          autoComplete="off"
+          className="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl focus:outline-none focus:ring-2 focus:ring-pink-500/50 focus:border-pink-500 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 transition-all duration-300 shadow-sm hover:shadow-md"
         />
       </div>
     </div>

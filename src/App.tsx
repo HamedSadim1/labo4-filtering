@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import AddStudentButton from "./components/AddStudentButton";
 import Background from "./components/Background";
 import Filtering from "./components/Filtering";
@@ -47,10 +47,10 @@ function App() {
     setShowForm(true);
   };
 
-  const handleCloseForm = (): void => {
+  const handleCloseForm = useCallback((): void => {
     setShowForm(false);
     setEditingStudent(null);
-  };
+  }, []);
 
   const handleSave = (formData: StudentFormData): void => {
     if (editingStudent) {
@@ -62,13 +62,7 @@ function App() {
   };
 
   return (
-    <div
-      className={`min-h-screen py-8 transition-all duration-500 relative overflow-hidden ${
-        darkMode
-          ? "bg-linear-to-br from-slate-950 via-gray-900 to-slate-900 text-white"
-          : "bg-linear-to-br from-pink-50 via-rose-50 to-purple-50 text-gray-900"
-      }`}
-    >
+    <div className="min-h-screen py-8 relative overflow-hidden bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-50 transition-colors duration-500">
       <Background />
 
       <div className="relative container mx-auto px-4 z-10">

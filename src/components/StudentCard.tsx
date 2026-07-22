@@ -15,37 +15,39 @@ const StudentCard: React.FC<StudentCardProps> = ({
   onDelete,
 }) => {
   return (
-    <div className="backdrop-blur-xl bg-black/20 dark:bg-black/30 rounded-3xl p-6 hover:bg-black/25 dark:hover:bg-black/40 transition-all duration-300 shadow-2xl border border-white/10 dark:border-white/5 hover:scale-105 hover:shadow-3xl group">
+    <div className="bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 rounded-3xl p-6 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
       <div className="text-center mb-4">
-        <div className="w-16 h-16 bg-linear-to-br from-pink-400 to-purple-600 rounded-full mx-auto mb-3 flex items-center justify-center shadow-lg">
+        <div className="w-16 h-16 bg-linear-to-br from-pink-400 to-purple-600 rounded-full mx-auto mb-3 flex items-center justify-center shadow-lg ring-4 ring-pink-100 dark:ring-purple-900/30">
           <span className="text-2xl font-bold text-white">
             {getStudentInitial(student.name)}
           </span>
         </div>
-        <h3 className="text-xl font-semibold text-white mb-1">
+        <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-1">
           {student.name}
         </h3>
       </div>
-      <div className="space-y-2 text-center">
-        <p className="text-white/80">
-          <span className="font-medium">Age:</span> {student.age}
-        </p>
-        <p className="text-white/80">
-          <span className="font-medium">Year:</span> {student.year}
-        </p>
+      <div className="flex justify-center gap-3 mb-6">
+        <span className="inline-flex items-center gap-1 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 px-3 py-1 rounded-full text-sm font-medium">
+          Age: {student.age}
+        </span>
+        <span className="inline-flex items-center gap-1 bg-pink-50 dark:bg-pink-500/10 text-pink-600 dark:text-pink-300 px-3 py-1 rounded-full text-sm font-medium">
+          Year: {student.year}
+        </span>
       </div>
-      <div className="flex gap-3 mt-6">
+      <div className="flex gap-3">
         <button
           onClick={() => onEdit(student)}
-          className="flex-1 backdrop-blur-sm bg-pink-500/20 hover:bg-pink-500/30 text-pink-300 px-4 py-2 rounded-xl transition-all duration-300 border border-pink-400/30 hover:border-pink-400/50"
+          aria-label={`Edit ${student.name}`}
+          className="flex-1 inline-flex items-center justify-center gap-2 bg-pink-50 dark:bg-pink-500/10 text-pink-600 dark:text-pink-300 hover:bg-pink-100 dark:hover:bg-pink-500/20 border border-pink-200 dark:border-pink-500/30 px-4 py-2 rounded-xl transition-all duration-300 focus-visible:ring-2 focus-visible:ring-pink-500 focus-visible:outline-none"
         >
-          <FaEdit className="inline mr-2" /> Edit
+          <FaEdit /> Edit
         </button>
         <button
           onClick={() => onDelete(student.id)}
-          className="flex-1 backdrop-blur-sm bg-red-500/20 hover:bg-red-500/30 text-red-300 px-4 py-2 rounded-xl transition-all duration-300 border border-red-400/30 hover:border-red-400/50"
+          aria-label={`Delete ${student.name}`}
+          className="flex-1 inline-flex items-center justify-center gap-2 bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-500/20 border border-red-200 dark:border-red-500/30 px-4 py-2 rounded-xl transition-all duration-300 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:outline-none"
         >
-          <FaTrash className="inline mr-2" /> Delete
+          <FaTrash /> Delete
         </button>
       </div>
     </div>
