@@ -1,4 +1,4 @@
-import { Student, StudentFormData } from "../types/Student";
+import { Student, StudentFormData } from "@/types/Student";
 
 export const generateStudentId = (): string => {
   return Date.now().toString();

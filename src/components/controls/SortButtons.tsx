@@ -1,5 +1,6 @@
 import React from "react";
 import { SortField, SortOrder } from "@/types/Student";
+import { SORT_FIELDS } from "@/utils";
 
 interface SortButtonsProps {
   sortBy: SortField;
@@ -14,13 +15,14 @@ interface SortButtonsProps {
 // background container is a soft slate so the active white-on-slate
 // segment reads as a push-button without needing an explicit
 // per-segment hover state — Tailwind handles the colour swap.
+//
+// `SORT_FIELDS` is sourced from `sortUtils.ts` so any future field
+// addition lives in one place.
 const SortButtons: React.FC<SortButtonsProps> = ({
   sortBy,
   sortOrder,
   onSort,
 }) => {
-  const fields: SortField[] = ["name", "age", "year"];
-
   const labelFor = (field: SortField): string =>
     sortBy === field
       ? `Change ${field} sort to ${sortOrder === "asc" ? "descending" : "ascending"}`
@@ -32,7 +34,7 @@ const SortButtons: React.FC<SortButtonsProps> = ({
       aria-label="Sort students"
       className="inline-flex items-center rounded-full bg-slate-100 dark:bg-slate-800 p-1 shadow-sm border border-slate-200 dark:border-slate-700 transition-colors duration-200"
     >
-      {fields.map((field) => {
+      {SORT_FIELDS.map((field) => {
         const isActive = sortBy === field;
         return (
           <button

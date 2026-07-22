@@ -1,6 +1,13 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { Student, StudentFormData } from "@/types/Student";
+import {
+  validatePositiveNumber,
+  validateRequired,
+} from "@/utils";
+import { useGlobalKeydown } from "@/hooks/useGlobalKeydown";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
+import { useRestoreFocus } from "@/hooks/useRestoreFocus";
 import FormActions from "./FormActions";
 import FormField from "./FormField";
 
@@ -16,29 +23,15 @@ const initialFormData: StudentFormData = {
   year: "",
 };
 
-const validatePositiveNumber = (
-  label: string,
-  value: string
-): string | undefined => {
-  if (!value.trim()) {
-    return `${label} is required`;
-  }
-  if (Number(value) <= 0) {
-    return `${label} must be greater than 0`;
-  }
-  return undefined;
-};
-
-const FOCUSABLE_SELECTOR =
-  'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
-
 const StudentForm: React.FC<StudentFormProps> = ({
   student,
   onSave,
   onClose,
 }) => {
   const [formData, setFormData] = useState<StudentFormData>(initialFormData);
-  const [errors, setErrors] = useState<Partial<Record<keyof StudentFormData, string>>>({});
+  const [errors, setErrors] = useState<
+    Partial<Record<keyof StudentFormData, string>>
+  >({});
   const dialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -54,83 +47,19 @@ const StudentForm: React.FC<StudentFormProps> = ({
     setErrors({});
   }, [student]);
 
-  useLayoutEffect(() => {
-    // Capture the trigger element so we can restore focus on close
-    const previouslyFocusedElement = document.activeElement as HTMLElement | null;
-
-    // Move focus into the dialog when it opens so Tab cycling is anchored here.
-    const dialog = dialogRef.current;
-    if (dialog) {
-      const firstFocusable = dialog.querySelector<HTMLElement>(FOCUSABLE_SELECTOR);
-      if (firstFocusable) {
-        firstFocusable.focus();
-      } else {
-        // Fallback when the dialog has no focusable descendants. Currently
-        // unreachable in this form: FormField inputs and FormActions always render
-        // focusable elements. Kept defensively so keyboard users still land
-        // somewhere safe if the form is ever rendered with all fields disabled.
-        //
-        // Niche caveat: while focus is on the dialog itself, the Tab handler below
-        // short-circuits on `focusables.length === 0`, which would let the browser's
-        // native Tab escape the modal. Acceptable here because this branch is
-        // unreachable; consider a stricter fallback if that ever changes.
-        dialog.setAttribute("tabindex", "-1");
-        dialog.focus();
-      }
-    }
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        e.preventDefault();
-        onClose();
-        return;
-      }
-      if (e.key !== "Tab") return;
-
-      const currentDialog = dialogRef.current;
-      if (!currentDialog) return;
-      const focusables = Array.from(
-        currentDialog.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)
-      );
-      if (focusables.length === 0) return;
-
-      // The empty-array guard above proves both ends are defined. The `!`
-      // assertions are required because `noUncheckedIndexedAccess` widens
-      // index access to `T | undefined`.
-      const first = focusables[0]!;
-      const last = focusables[focusables.length - 1]!;
-      const active = document.activeElement as HTMLElement | null;
-      const currentIndex = active ? focusables.indexOf(active) : -1;
-
-      if (e.shiftKey) {
-        // Shift+Tab on the first element wraps to the last
-        if (currentIndex <= 0) {
-          e.preventDefault();
-          last.focus();
-        }
-      } else if (currentIndex === focusables.length - 1) {
-        // Tab on the last element wraps to the first
-        e.preventDefault();
-        first.focus();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      // Restore focus to whatever element opened the dialog (Add or Edit button).
-      // `document.contains` guards against the trigger having been removed from
-      // the DOM while the modal was open (e.g., the StudentCard was deleted).
-      if (previouslyFocusedElement && document.contains(previouslyFocusedElement)) {
-        previouslyFocusedElement.focus();
-      }
-    };
-  }, [onClose]);
+  // Modal accessibility composed from three reusable hooks. Each owns
+  // one concern so the StudentForm component body stays focused on
+  // form state rather than focus management.
+  useFocusTrap(dialogRef);
+  useRestoreFocus();
+  // Escape closes the modal even when focus is in the form fields.
+  useGlobalKeydown("Escape", () => onClose(), { skipWhenEditable: false });
 
   const validate = (data: StudentFormData): typeof errors => {
     const nextErrors: typeof errors = {};
-    if (!data.name.trim()) {
-      nextErrors.name = "Name is required";
+    const nameError = validateRequired("Name", data.name);
+    if (nameError) {
+      nextErrors.name = nameError;
     }
     const ageError = validatePositiveNumber("Age", data.age);
     if (ageError) {

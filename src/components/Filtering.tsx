@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Student, SortField, SortOrder } from "@/types/Student";
 import { filterStudents, sortStudents, toggleSortOrder } from "@/utils";
+import { useGlobalKeydown } from "@/hooks/useGlobalKeydown";
 import AddStudentButton from "@/components/controls/AddStudentButton";
 import SearchBar from "@/components/controls/SearchBar";
 import SortButtons from "@/components/controls/SortButtons";
@@ -40,51 +41,18 @@ const Filtering: React.FC<FilteringProps> = ({
     }
   };
 
-  // Stable ref so the global keydown handler always calls the
-  // freshest `onAddNew` (which App re-creates on every render)
-  // without re-attaching the listener each render. Assigned
-  // during render directly — no useEffect needed, no lint warning.
-  // Stable ref so the global keydown handler always calls the
-  // freshest `onAddNew` (which App re-creates on every render)
-  // without re-attaching the listener each render. The ref is
-  // updated in a deps-aware `useEffect` because React 19's hooks
-  // rule disallows assigning `ref.current` directly during the
-  // render cycle (the prior ref-during-render attempt tripped
-  // this and failed lint).
+  // Stable ref so the global `c` shortcut always calls the freshest
+  // `onAddNew` (which App re-creates on every render) without
+  // re-registering the listener on every render.
   const onAddNewRef = useRef(onAddNew);
   useEffect(() => {
     onAddNewRef.current = onAddNew;
   }, [onAddNew]);
 
-  // Global `C` keyboard shortcut: opens the add-student form when
-  // no input/textarea/contentEditable is already focused and the
-  // key isn't part of a chord (Ctrl/Meta/Alt). Mirrors the
-  // shortcut pattern SearchBar uses for `/`.
-  useEffect(() => {
-    const handler = (event: KeyboardEvent) => {
-      if (
-        (event.key !== "c" && event.key !== "C") ||
-        event.ctrlKey ||
-        event.metaKey ||
-        event.altKey
-      ) {
-        return;
-      }
-      const target = event.target as HTMLElement | null;
-      if (target) {
-        const tag = target.tagName?.toLowerCase();
-        const editable =
-          tag === "input" || tag === "textarea" || target.isContentEditable;
-        if (editable) {
-          return;
-        }
-      }
-      event.preventDefault();
-      onAddNewRef.current?.();
-    };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, []);
+  // Global `C` keyboard shortcut (mirrors the SearchBar `/` shortcut).
+  // Modifier/editable guards live in `useGlobalKeydown` so both
+  // call-sites share one implementation.
+  useGlobalKeydown(["c", "C"], () => onAddNewRef.current?.());
 
   return (
     <div>

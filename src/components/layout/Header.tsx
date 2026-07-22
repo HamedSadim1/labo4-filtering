@@ -1,5 +1,6 @@
 import React from "react";
 import { FaMoon, FaSun, FaUserGraduate } from "react-icons/fa";
+import CardSurface from "./CardSurface";
 
 interface HeaderProps {
   darkMode: boolean;
@@ -9,7 +10,7 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ darkMode, onToggleDarkMode }) => {
   return (
     <header className="mb-8">
-      <div className="backdrop-blur-xl bg-white/70 dark:bg-slate-900/70 rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200 dark:border-slate-800">
+      <CardSurface darkTone="900" padding="p-6 sm:p-8">
         {/* Title row: brand block (badge + title + tagline) on the left,
             dark-mode toggle anchored right. flex-wrap means the toggle
             drops below the brand block on narrow screens instead of
@@ -72,7 +73,7 @@ const Header: React.FC<HeaderProps> = ({ darkMode, onToggleDarkMode }) => {
             />
           </button>
         </div>
-      </div>
+      </CardSurface>
     </header>
   );
 };

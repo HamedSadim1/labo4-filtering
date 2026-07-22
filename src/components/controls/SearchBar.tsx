@@ -1,5 +1,6 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { FaSearch, FaTimes } from "react-icons/fa";
+import { useGlobalKeydown } from "@/hooks/useGlobalKeydown";
 
 interface SearchBarProps {
   searchText: string;
@@ -14,30 +15,9 @@ interface SearchBarProps {
 const SearchBar: React.FC<SearchBarProps> = ({ searchText, onSearchChange }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Global `/` keyboard shortcut. Comfortable pattern (used by
-  // GitHub, Linear, Vercel) — pressing `/` while no input/textarea/
-  // contentEditable element is focused jumps straight to the search
-  // field without a click.
-  useEffect(() => {
-    const handler = (event: KeyboardEvent) => {
-      if (event.key !== "/" || event.ctrlKey || event.metaKey || event.altKey) {
-        return;
-      }
-      const target = event.target as HTMLElement | null;
-      if (target) {
-        const tag = target.tagName?.toLowerCase();
-        const editable =
-          tag === "input" || tag === "textarea" || target.isContentEditable;
-        if (editable) {
-          return;
-        }
-      }
-      event.preventDefault();
-      inputRef.current?.focus();
-    };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, []);
+  // Global `/` keyboard shortcut (GitHub / Linear / Vercel pattern).
+  // Modifier/editable guards live in `useGlobalKeydown`.
+  useGlobalKeydown("/", () => inputRef.current?.focus());
 
   return (
     <div className="relative group flex-1 min-w-0">
