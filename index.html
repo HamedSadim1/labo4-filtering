@@ -1,6 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
+    <!-- Blocking inline script — runs before any paint to set the
+         dark class on <html> so Tailwind's `dark:` variants are
+         active from the first frame. Without this, the browser
+         paints light-mode styles first (white background), then
+         React loads, runs useEffect, and adds the dark class —
+         causing a visible white flash on every refresh. Class="dark"
+         on the <html> tag itself is the SSR-side fallback for the
+         same reason. -->
+    <script>
+      document.documentElement.classList.add("dark");
+    </script>
     <meta charset="UTF-8" />
     <link rel="icon" href="/favicon.png" />
     <link rel="manifest" href="/manifest.json" />
